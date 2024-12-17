@@ -1,0 +1,182 @@
+<nav class="site-nav ps">
+  <ul class="menu ps">
+    {% if linklists.pproduct-menu.links.size > 0 %}   ----------use handle
+      {% for link in linklists.pproduct-menu.links %}
+        <li class="menu-item ps {% if link.links.size > 0 %}has-submenu{% endif %} pp-{{ forloop.index }}">
+          <!-- Main menu link -->
+          {% if link.links.size > 0 %}
+            <!-- Main menu link with accordion button (for dropdown) -->
+            <button class="accordion ps">
+              <a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a>
+            </button>
+
+            <!-- Submenu for main menu item -->
+            <div class="panel ps">
+              {% if link.links %}
+                <ul class="submenu ps">
+                  {% for sublink in link.links %}
+                    <li class="submenu-item ps {% if sublink.links.size > 0 %}has-submenu{% endif %}">
+                      <!-- Submenu link with accordion button -->
+                      {% if sublink.links.size > 0 %}
+                        <button class="accordion ps">
+                          <a href="{{ sublink.url }}" title="{{ sublink.title }}">{{ sublink.title }}</a>
+                        </button>
+                      {% else %}
+                        <a href="{{ sublink.url }}" title="{{ sublink.title }}">{{ sublink.title }}</a>
+                      {% endif %}
+
+                      <!-- Sub-submenu for sublink -->
+                      <div class="panel ps">
+                        {% if sublink.links %}
+                          <ul class="submenu ps">
+                            {% for subsub_link in sublink.links %}
+                              <li class="submenu-item ps">
+                                <a href="{{ subsub_link.url }}" title="{{ subsub_link.title }}">{{ subsub_link.title }}</a>
+                              </li>
+                            {% endfor %}
+                          </ul>
+                        {% endif %}
+                      </div>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </div>
+          {% else %}
+            <!-- No submenu, just a direct link -->
+            <a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a>
+          {% endif %}
+        </li>
+      {% endfor %}
+    {% else %}
+      <li class="ps">No links available in the menu</li>
+    {% endif %}
+  </ul>
+</nav>
+
+
+
+<style>
+li.menu-item.ps.pp-3 a {
+    color: #000000ad;
+    font-weight: 700;
+}
+  
+li.menu-item.ps.has-submenu {
+    border-bottom: 1px solid #00000030;
+}
+  
+  li.menu-item.ps button {
+    font-size: 13px;
+    color: black;
+    font-weight: 700;
+}
+  .ps-nav.popup-navigation__menu.d-lg-none.pb-25.px-10 {
+    display: block;
+}
+  nav.site-nav.ps {
+        padding: 1rem;
+}
+/* Basic Styling for the Accordion Buttons */
+  button.accordion.ps a {
+    color: #000000ad;
+}
+  li.menu-item.ps {
+    border-bottom: 1px solid #00000030;
+    padding: 9px 0px;
+}
+.accordion.ps {
+    background-color: #00000000;
+    color: #333;
+    cursor: pointer;
+    padding: 0px 0px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    font-size: 17px;
+    font-weight: 900;
+    transition: background-color 0.3s;
+    position: relative;
+    border-radius: 5px;
+}
+
+.accordion.ps.active {
+  background-color: #f4f4f4;
+}
+
+/* Style for the Panels (Submenus) */
+.panel.ps {
+  padding: 0 20px;
+  background-color: #f2f2f200;;
+  display: none; /* Initially hidden */
+  margin-bottom: 10px;
+  border-radius: 0 0 5px 5px;
+}
+
+/* Arrow for Accordion Button */
+.accordion.ps::after {
+  content: '\203A';  /* Unicode for '>' symbol */
+  font-size: 20px;
+  font-weight: bold;
+  color: #444;
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: transform 0.3s ease;
+}
+
+.accordion.ps.active::after {
+  transform: translateY(-50%) rotate(90deg); /* Rotate arrow when active */
+}
+
+/* Styling for the nested submenus */
+.submenu.ps {
+  list-style: none;  /* Remove list bullets */
+  padding-left: 20px;
+}
+ul:not(.list-unstyled):not([list-unstyled]) li::before {
+    display: none !important;
+    content: "";
+    margin-bottom: 2px;
+    margin-right: 10px;
+    margin-left: -16px;
+    border-radius: 50%;
+    width: 4px;
+    height: 4px;
+}
+ul:not(.list-unstyled):not([list-unstyled]) li {
+  padding-left: 0px !important;
+}
+
+li.ps-menu-item {
+  border-bottom: 1px solid #00000026;
+}
+
+</style>
+<script>
+// Get all elements with the 'accordion' class
+var acc = document.getElementsByClassName("accordion");
+
+// Loop through each accordion item and add a click event
+for (var i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function(event) {
+    // Check if the item has a submenu (check if next element is a panel)
+    var panel = this.nextElementSibling;
+
+    // If there is a submenu (panel), prevent the default link behavior
+    if (panel && panel.classList.contains("panel")) {
+      event.preventDefault();  // Prevent navigation if there's a submenu
+      this.classList.toggle("active"); // Toggle the 'active' state for the accordion
+
+      // Toggle the visibility of the submenu (panel)
+      if (panel.style.display === "block") {
+        panel.style.display = "none"; // Hide the panel (submenu)
+      } else {
+        panel.style.display = "block"; // Show the panel (submenu)
+      }
+    }
+  });
+}
+
+</script>
